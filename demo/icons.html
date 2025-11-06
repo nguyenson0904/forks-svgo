@@ -20,6 +20,25 @@
         margin-bottom: 1.5rem;
         font-size: clamp(1.5rem, 2.5vw, 2.25rem);
       }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        align-items: center;
+      }
+      .controls label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+      }
+      .controls input {
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(15, 23, 42, 0.2);
+        font: inherit;
+      }
       .icon-grid {
         display: grid;
         gap: 1rem;
@@ -35,18 +54,32 @@
         background-color: #ffffff;
         box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
         gap: 0.75rem;
+        transition: transform 0.15s ease;
       }
       .icon-card span {
         font-size: 0.9rem;
         font-weight: 600;
         letter-spacing: 0.01em;
       }
+      .icon-card.hidden {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <main>
       <h1>SVG Icon Demo</h1>
-      <div class="icon-grid">
+      <div class="controls">
+        <label>
+          <span>Search</span>
+          <input type="search" id="icon-search" placeholder="Filter icons..." autocomplete="off" />
+        </label>
+        <label>
+          <span>Icon size (rem)</span>
+          <input type="number" id="icon-size" min="1" max="10" step="0.25" value="3" />
+        </label>
+      </div>
+      <div class="icon-grid" id="icon-grid">
         <div class="icon-card">
             <i class="svg-icon-mail"></i>
             <span>icon-mail</span>
@@ -69,5 +102,30 @@
         </div>
       </div>
     </main>
+    <script>
+      const searchInput = document.getElementById('icon-search');
+      const sizeInput = document.getElementById('icon-size');
+      const iconCards = Array.from(document.querySelectorAll('.icon-card'));
+
+      const applyFilter = (query) => {
+        const normalized = query.trim().toLowerCase();
+        iconCards.forEach((card) => {
+          const name = card.querySelector('span').textContent.toLowerCase();
+          card.classList.toggle('hidden', normalized && !name.includes(normalized));
+        });
+      };
+
+      const applySize = (value) => {
+        const numeric = Number.parseFloat(value);
+        if (!Number.isFinite(numeric) || numeric <= 0) {
+          return;
+        }
+        document.documentElement.style.setProperty('--icon-size', `${numeric}rem`);
+      };
+
+      searchInput?.addEventListener('input', (event) => applyFilter(event.target.value));
+      sizeInput?.addEventListener('input', (event) => applySize(event.target.value));
+      applySize(sizeInput?.value ?? 3);
+    </script>
   </body>
 </html>
