@@ -166,6 +166,30 @@ You can also specify a path and customize the current working directory.
 const config = await loadConfig(configFile, cwd);
 ```
 
+## Icon pipeline helper
+
+The repository ships with a helper script for building a SCSS icon map, optimized SVG assets, and a demo page.
+
+```sh
+yarn generate:icons
+```
+
+By default the script:
+
+- Reads every `.svg` file from `./input`
+- Optimizes each file (multipass, removes `viewBox`) into `./output`
+- Generates `./output/_icon.scss` containing a `$icons` map with inline SVG data URIs
+- Compiles the SCSS to CSS at `./demo/icons.css`
+- Produces an HTML preview grid at `./demo/icons.html`
+
+Pass `--input`, `--output`, `--scss`, `--demo`, or `--democss` to customise locations:
+
+```sh
+yarn generate:icons -- --input assets/icons --output dist/icons --scss styles/_icon.scss
+```
+
+The demo page uses classes like `<i class="svg-iconname"></i>` so you can quickly verify the icon set.
+
 ## Donors
 
 | [<img src="https://sheetjs.com/sketch128.png" width="80">](https://sheetjs.com/) | [<img src="https://raw.githubusercontent.com/fontello/fontello/8.0.0/fontello-image.svg" width="80">](https://fontello.com/) |
